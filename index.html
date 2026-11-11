@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SAP Enterprise AI Assistant</title>
+    <!-- SAP UI5 CDN for Official Fiori Styling -->
+    <script id="sap-ui-bootstrap"
+        src="https://sdk.openui5.org/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m, sap.f, sap.ui.layout">
+    </script>
+    <style>
+        body { margin: 0; padding: 20px; background-color: #f5f7fa; font-family: Arial, sans-serif; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .badge { background: #e50310; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+        .btn { background: #0a6ed1; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #0854a0; }
+        textarea { width: 100%; height: 80px; margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>SAP Enterprise AI Support Assistant</h2>
+        <p>Paste an unstructured SAP ERP issue or support ticket below:</p>
+        <textarea id="userInput">Warehouse team is unable to post Goods Receipt for PO #4500123. Table T001W entry missing. This is blocking 20 shipments today.</textarea>
+        <button class="btn" onclick="processAIQuery()">Process with SAP AI Engine</button>
+    </div>
+
+    <div id="outputCard" class="card" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="moduleName" style="margin:0; color: #0a6ed1;"></h3>
+            <span id="priorityBadge" class="badge"></span>
+        </div>
+        <hr style="border: 0.5px solid #eee; margin: 15px 0;">
+        <p><strong>Executive Summary:</strong> <span id="summaryText"></span></p>
+        <p><strong>Recommended SAP Actions:</strong></p>
+        <ul id="actionList"></ul>
+    </div>
+
+    <script>
+        function processAIQuery() {
+            // Colab wala simulated JSON AI output
+            var aiResponse = {
+                "ticket_metadata": {
+                    "detected_module": "SAP MM (Materials Management)",
+                    "priority": "HIGH PRIORITY",
+                    "sentiment": "Critical - Shipment Blocked"
+                },
+                "executive_summary": "Goods Receipt posting failed due to missing plant configuration entry in SAP table T001W for PO #4500123.",
+                "recommended_actions": [
+                    "Access SPRO configuration transaction in SAP GUI.",
+                    "Check Plant assignment under Enterprise Structure > Definition > Logistics - General.",
+                    "Ensure Table T001W has active plant entry for the target plant."
+                ]
+            };
+
+            // UI Components update karna
+            document.getElementById("moduleName").innerText = aiResponse.ticket_metadata.detected_module;
+            document.getElementById("priorityBadge").innerText = aiResponse.ticket_metadata.priority;
+            document.getElementById("summaryText").innerText = aiResponse.executive_summary;
+
+            var list = document.getElementById("actionList");
+            list.innerHTML = "";
+            aiResponse.recommended_actions.forEach(function(action) {
+                var li = document.createElement("li");
+                li.innerText = action;
+                list.appendChild(li);
+            });
+
+            document.getElementById("outputCard").style.display = "block";
+        }
+    </script>
+</body>
+</html>
